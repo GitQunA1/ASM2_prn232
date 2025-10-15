@@ -1,0 +1,43 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 17
+VisualStudioVersion = 17.14.36511.14
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "EVRental.Repositories.QuanNH", "EVRental.Repositories.QuanNH\EVRental.Repositories.QuanNH.csproj", "{5C692D26-ADB3-8752-3712-93CD28F85ABD}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "EVRental.Services.QuanNH", "EVRental.Services.QuanNH\EVRental.Services.QuanNH.csproj", "{A2E462FE-23D6-870A-0AC5-7127E7E0F586}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "EVRental.GraphQLWebAPI.QuanNH", "EVRental.GraphQLWebAPI.QuanNH\EVRental.GraphQLWebAPI.QuanNH.csproj", "{0AD1F63B-3049-4498-B2EA-5BE8A0948B9E}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "EVRental.BlazorWebApp.QuanNH", "EVRental.BlazorWebApp.QuanNH\EVRental.BlazorWebApp.QuanNH.csproj", "{1D153DB0-5F67-461E-A4C1-F695BE6585EB}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{5C692D26-ADB3-8752-3712-93CD28F85ABD}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{5C692D26-ADB3-8752-3712-93CD28F85ABD}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{5C692D26-ADB3-8752-3712-93CD28F85ABD}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{5C692D26-ADB3-8752-3712-93CD28F85ABD}.Release|Any CPU.Build.0 = Release|Any CPU
+		{A2E462FE-23D6-870A-0AC5-7127E7E0F586}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{A2E462FE-23D6-870A-0AC5-7127E7E0F586}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{A2E462FE-23D6-870A-0AC5-7127E7E0F586}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{A2E462FE-23D6-870A-0AC5-7127E7E0F586}.Release|Any CPU.Build.0 = Release|Any CPU
+		{0AD1F63B-3049-4498-B2EA-5BE8A0948B9E}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{0AD1F63B-3049-4498-B2EA-5BE8A0948B9E}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{0AD1F63B-3049-4498-B2EA-5BE8A0948B9E}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{0AD1F63B-3049-4498-B2EA-5BE8A0948B9E}.Release|Any CPU.Build.0 = Release|Any CPU
+		{1D153DB0-5F67-461E-A4C1-F695BE6585EB}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{1D153DB0-5F67-461E-A4C1-F695BE6585EB}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{1D153DB0-5F67-461E-A4C1-F695BE6585EB}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{1D153DB0-5F67-461E-A4C1-F695BE6585EB}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {DDDD69D0-6B2B-409D-8BB3-CCBAB23532B2}
+	EndGlobalSection
+EndGlobal

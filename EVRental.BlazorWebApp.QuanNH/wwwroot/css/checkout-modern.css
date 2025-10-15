@@ -1,0 +1,439 @@
+/* Modern Checkout Pages Styles */
+/* ================================ */
+
+:root {
+    --primary-gradient-start: #667eea;
+    --primary-gradient-end: #764ba2;
+    --success-gradient-start: #48bb78;
+    --success-gradient-end: #38a169;
+    --warning-gradient-start: #f6ad55;
+    --warning-gradient-end: #ed8936;
+    --danger-gradient-start: #fc8181;
+    --danger-gradient-end: #f56565;
+    --info-gradient-start: #63b3ed;
+    --info-gradient-end: #4299e1;
+    --card-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+    --card-hover-shadow: 0 15px 40px rgba(0, 0, 0, 0.15);
+    --transition-speed: 0.3s;
+}
+
+/* Animated Background */
+.page-background {
+    background: linear-gradient(-45deg, #ee7752, #e73c7e, #23a6d5, #23d5ab);
+    background-size: 400% 400%;
+    animation: gradient 15s ease infinite;
+    min-height: 100vh;
+    position: fixed;
+    width: 100%;
+    z-index: -1;
+}
+
+@keyframes gradient {
+    0% { background-position: 0% 50%; }
+    50% { background-position: 100% 50%; }
+    100% { background-position: 0% 50%; }
+}
+
+/* Modern Card Styles */
+.card-modern {
+    background: rgba(255, 255, 255, 0.95);
+    backdrop-filter: blur(10px);
+    border: none;
+    border-radius: 20px;
+    box-shadow: var(--card-shadow);
+    transition: all var(--transition-speed) ease;
+}
+
+.card-modern:hover {
+    transform: translateY(-5px);
+    box-shadow: var(--card-hover-shadow);
+}
+
+/* Header Cards with Gradient */
+.header-card-gradient {
+    background: linear-gradient(135deg, var(--primary-gradient-start) 0%, var(--primary-gradient-end) 100%);
+    border-radius: 20px !important;
+    padding: 2rem;
+    position: relative;
+    overflow: hidden;
+}
+
+.header-card-gradient::before {
+    content: '';
+    position: absolute;
+    top: -50%;
+    right: -50%;
+    width: 200%;
+    height: 200%;
+    background: radial-gradient(circle, rgba(255,255,255,0.1) 0%, transparent 70%);
+    animation: shimmer 3s infinite;
+}
+
+@keyframes shimmer {
+    0% { transform: rotate(0deg); }
+    100% { transform: rotate(360deg); }
+}
+
+/* Modern Stats Cards */
+.stat-card {
+    background: white;
+    border-radius: 15px;
+    padding: 1.5rem;
+    border: none;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.08);
+    transition: all var(--transition-speed) ease;
+    position: relative;
+    overflow: hidden;
+}
+
+.stat-card:hover {
+    transform: translateY(-8px);
+    box-shadow: 0 8px 25px rgba(0, 0, 0, 0.15);
+}
+
+.stat-card::after {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 4px;
+    background: linear-gradient(90deg, var(--primary-gradient-start), var(--primary-gradient-end));
+}
+
+.stat-icon-wrapper {
+    width: 60px;
+    height: 60px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 15px;
+    font-size: 1.8rem;
+}
+
+/* Modern Table Styles */
+.table-modern {
+    background: white;
+    border-radius: 15px;
+    overflow: hidden;
+    box-shadow: 0 5px 20px rgba(0, 0, 0, 0.08);
+}
+
+.table-modern thead {
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    color: white;
+}
+
+.table-modern th {
+    border: none;
+    padding: 1rem;
+    font-weight: 600;
+    letter-spacing: 0.5px;
+    text-transform: uppercase;
+    font-size: 0.85rem;
+}
+
+.table-modern tbody tr {
+    border-bottom: 1px solid #f0f0f0;
+    transition: all var(--transition-speed) ease;
+}
+
+.table-modern tbody tr:hover {
+    background-color: #f8f9ff;
+    transform: scale(1.01);
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+}
+
+.table-modern td {
+    padding: 1rem;
+    vertical-align: middle;
+    border: none;
+}
+
+/* Modern Badges */
+.badge-modern {
+    padding: 0.5rem 1rem;
+    border-radius: 50px;
+    font-weight: 500;
+    font-size: 0.85rem;
+    letter-spacing: 0.5px;
+    transition: all var(--transition-speed) ease;
+}
+
+.badge-modern:hover {
+    transform: scale(1.05);
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+}
+
+.badge-gradient-primary {
+    background: linear-gradient(135deg, var(--primary-gradient-start), var(--primary-gradient-end));
+    color: white;
+}
+
+.badge-gradient-success {
+    background: linear-gradient(135deg, var(--success-gradient-start), var(--success-gradient-end));
+    color: white;
+}
+
+.badge-gradient-warning {
+    background: linear-gradient(135deg, var(--warning-gradient-start), var(--warning-gradient-end));
+    color: white;
+}
+
+.badge-gradient-danger {
+    background: linear-gradient(135deg, var(--danger-gradient-start), var(--danger-gradient-end));
+    color: white;
+}
+
+/* Modern Buttons */
+.btn-modern {
+    padding: 0.75rem 2rem;
+    border-radius: 50px;
+    font-weight: 500;
+    transition: all var(--transition-speed) ease;
+    border: none;
+    position: relative;
+    overflow: hidden;
+}
+
+.btn-modern::before {
+    content: '';
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: 0;
+    height: 0;
+    border-radius: 50%;
+    background: rgba(255, 255, 255, 0.3);
+    transform: translate(-50%, -50%);
+    transition: width 0.6s, height 0.6s;
+}
+
+.btn-modern:hover::before {
+    width: 300px;
+    height: 300px;
+}
+
+.btn-gradient-primary {
+    background: linear-gradient(135deg, var(--primary-gradient-start), var(--primary-gradient-end));
+    color: white;
+}
+
+.btn-gradient-success {
+    background: linear-gradient(135deg, var(--success-gradient-start), var(--success-gradient-end));
+    color: white;
+}
+
+.btn-gradient-warning {
+    background: linear-gradient(135deg, var(--warning-gradient-start), var(--warning-gradient-end));
+    color: white;
+}
+
+.btn-gradient-danger {
+    background: linear-gradient(135deg, var(--danger-gradient-start), var(--danger-gradient-end));
+    color: white;
+}
+
+.btn-gradient-info {
+    background: linear-gradient(135deg, var(--info-gradient-start), var(--info-gradient-end));
+    color: white;
+}
+
+.btn-modern:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 10px 20px rgba(0, 0, 0, 0.2);
+}
+
+/* Modern Forms */
+.form-modern .form-control,
+.form-modern .form-select {
+    border: 2px solid #e8e8e8;
+    border-radius: 12px;
+    padding: 0.75rem 1rem;
+    transition: all var(--transition-speed) ease;
+    background-color: #f8f9fa;
+}
+
+.form-modern .form-control:focus,
+.form-modern .form-select:focus {
+    border-color: var(--primary-gradient-start);
+    box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+    background-color: white;
+}
+
+.form-modern .form-label {
+    font-weight: 600;
+    color: #4a5568;
+    margin-bottom: 0.5rem;
+    display: flex;
+    align-items: center;
+}
+
+.form-modern .form-label i {
+    margin-right: 0.5rem;
+    color: var(--primary-gradient-start);
+}
+
+/* Modern Switches */
+.form-check-modern .form-check-input {
+    width: 3rem;
+    height: 1.5rem;
+    background-color: #cbd5e0;
+    border: none;
+    cursor: pointer;
+}
+
+.form-check-modern .form-check-input:checked {
+    background: linear-gradient(90deg, var(--primary-gradient-start), var(--primary-gradient-end));
+}
+
+/* Floating Action Buttons */
+.fab-container {
+    position: fixed;
+    bottom: 2rem;
+    right: 2rem;
+    z-index: 1000;
+}
+
+.fab-button {
+    width: 60px;
+    height: 60px;
+    border-radius: 50%;
+    background: linear-gradient(135deg, var(--primary-gradient-start), var(--primary-gradient-end));
+    border: none;
+    color: white;
+    font-size: 1.5rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
+    transition: all var(--transition-speed) ease;
+    cursor: pointer;
+}
+
+.fab-button:hover {
+    transform: scale(1.1) rotate(90deg);
+    box-shadow: 0 6px 20px rgba(0, 0, 0, 0.4);
+}
+
+/* Loading Animations */
+.skeleton-loader {
+    background: linear-gradient(90deg, #f0f0f0 25%, #e0e0e0 50%, #f0f0f0 75%);
+    background-size: 200% 100%;
+    animation: loading 1.5s infinite;
+}
+
+@keyframes loading {
+    0% { background-position: 200% 0; }
+    100% { background-position: -200% 0; }
+}
+
+/* Pulse Animation for Status Indicators */
+.pulse-animation {
+    animation: pulse 2s infinite;
+}
+
+@keyframes pulse {
+    0% {
+        box-shadow: 0 0 0 0 rgba(102, 126, 234, 0.7);
+    }
+    70% {
+        box-shadow: 0 0 0 10px rgba(102, 126, 234, 0);
+    }
+    100% {
+        box-shadow: 0 0 0 0 rgba(102, 126, 234, 0);
+    }
+}
+
+/* Modern Modal */
+.modal-modern .modal-content {
+    border: none;
+    border-radius: 20px;
+    box-shadow: 0 15px 40px rgba(0, 0, 0, 0.2);
+}
+
+.modal-modern .modal-header {
+    border-radius: 20px 20px 0 0;
+    border: none;
+    padding: 1.5rem;
+}
+
+.modal-modern .modal-footer {
+    border: none;
+    padding: 1.5rem;
+}
+
+/* Glassmorphism Effect */
+.glass-effect {
+    background: rgba(255, 255, 255, 0.25);
+    backdrop-filter: blur(10px);
+    border: 1px solid rgba(255, 255, 255, 0.18);
+    border-radius: 15px;
+}
+
+/* Detail Page Sections */
+.detail-section {
+    background: white;
+    border-radius: 15px;
+    padding: 1.5rem;
+    margin-bottom: 1.5rem;
+    box-shadow: 0 3px 10px rgba(0, 0, 0, 0.08);
+    transition: all var(--transition-speed) ease;
+}
+
+.detail-section:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.12);
+}
+
+.detail-section h5 {
+    color: var(--primary-gradient-start);
+    font-weight: 600;
+    margin-bottom: 1rem;
+    padding-bottom: 0.5rem;
+    border-bottom: 2px solid #f0f0f0;
+}
+
+/* Empty State Illustration */
+.empty-state {
+    padding: 3rem;
+    text-align: center;
+    background: white;
+    border-radius: 20px;
+    box-shadow: 0 5px 20px rgba(0, 0, 0, 0.08);
+}
+
+.empty-state i {
+    font-size: 5rem;
+    color: #cbd5e0;
+    margin-bottom: 1rem;
+}
+
+.empty-state h5 {
+    color: #718096;
+    font-weight: 600;
+}
+
+.empty-state p {
+    color: #a0aec0;
+}
+
+/* Pagination Modern */
+.pagination-modern .page-link {
+    border: none;
+    margin: 0 3px;
+    border-radius: 10px;
+    color: #4a5568;
+    padding: 0.5rem 1rem;
+    transition: all var(--transition-speed) ease;
+}
+
+.pagination-modern .page-item.active .page-link {
+    background: linear-gradient(135deg, var(--primary-gradient-start), var(--primary-gradient-end));
+    color: white;
+}
+
+.pagination-modern .page-link:hover {
+    background: #f7fafc;
+    transform: translateY(-2px);
+}
