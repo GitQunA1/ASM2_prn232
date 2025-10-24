@@ -1,5 +1,7 @@
 ﻿@page "/CheckOutQuanNhs/CheckOutQuanNhList"
 @using EVRental.BlazorWebApp.QuanNH.Models
+@using Microsoft.AspNetCore.Authorization
+@attribute [Authorize]
 @inject EVRental.BlazorWebApp.QuanNH.GraphQLClients.GraphQLConsumers _graphQLConsumers;
 @inject NavigationManager Navigation
 
@@ -23,8 +25,55 @@
                 </div>
             </div>
 
+            @* Search Panel *@
+            <div class="card-modern mb-4">
+                <div class="card-body">
+                    <div class="row g-3">
+                        <div class="col-md-3">
+                            <label class="form-label small fw-bold">
+                                <i class="bi bi-file-text me-1"></i>Note
+                            </label>
+                            <input type="text" 
+                                   class="form-control" 
+                                   placeholder="Search by note..." 
+                                   @bind="SearchNote"
+                                   @bind:event="oninput" />
+                        </div>
+                        <div class="col-md-3">
+                            <label class="form-label small fw-bold">
+                                <i class="bi bi-currency-dollar me-1"></i>Cost
+                            </label>
+                            <input type="number" 
+                                   class="form-control" 
+                                   placeholder="Search by cost..." 
+                                   @bind="SearchCost"
+                                   @bind:event="oninput"
+                                   step="0.01" />
+                        </div>
+                        <div class="col-md-3">
+                            <label class="form-label small fw-bold">
+                                <i class="bi bi-tag me-1"></i>Return Condition Name
+                            </label>
+                            <input type="text" 
+                                   class="form-control" 
+                                   placeholder="Search by return condition..." 
+                                   @bind="SearchName"
+                                   @bind:event="oninput" />
+                        </div>
+                        <div class="col-md-3 d-flex align-items-end gap-2">
+                            <button class="btn btn-gradient-primary flex-fill" @onclick="SearchData">
+                                <i class="bi bi-search me-1"></i>Search
+                            </button>
+                            <button class="btn btn-outline-secondary" @onclick="ClearSearch">
+                                <i class="bi bi-arrow-clockwise"></i>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
             @* Loading State *@
-            @if (CheckOutQuanNhs == null)
+            @if (IsLoading)
             {
                 <div class="card-modern">
                     <div class="card-body text-center py-5">
@@ -36,13 +85,22 @@
                 </div>
             }
             @* Empty State *@
-            else if (!CheckOutQuanNhs.Any())
+            else if (CheckOutQuanNhs == null || !CheckOutQuanNhs.Any())
             {
                 <div class="card-modern empty-state">
                     <div class="card-body text-center py-5">
                         <i class="bi bi-inbox display-4 text-muted"></i>
                         <h5 class="mt-3 text-muted">No records found</h5>
-                        <p class="text-muted">Click "Create New" to add your first record</p>
+                        <p class="text-muted">
+                            @if (HasSearchCriteria)
+                            {
+                                <span>Try adjusting your search criteria</span>
+                            }
+                            else
+                            {
+                                <span>Click "Create New" to add your first record</span>
+                            }
+                        </p>
                     </div>
                 </div>
             }
@@ -60,7 +118,7 @@
                                     </div>
                                     <div>
                                         <h6 class="text-muted mb-0 small">Total Records</h6>
-                                        <h4 class="mb-0">@CheckOutQuanNhs.Count</h4>
+                                        <h4 class="mb-0">@TotalItems</h4>
                                     </div>
                                 </div>
                             </div>
@@ -326,6 +384,7 @@
 
 @code {
     private List<CheckOutQuanNh>? CheckOutQuanNhs;
+    private bool IsLoading = false;
     
     // Pagination
     private int CurrentPage { get; set; } = 1;
@@ -333,39 +392,88 @@
     private int TotalPages { get; set; } = 1;
     private int TotalItems { get; set; } = 0;
 
+    // Search fields
+    private string? SearchNote { get; set; }
+    private decimal? SearchCost { get; set; }
+    private string? SearchName { get; set; }
+
+    private bool HasSearchCriteria => 
+        !string.IsNullOrWhiteSpace(SearchNote) || 
+        SearchCost.HasValue || 
+        !string.IsNullOrWhiteSpace(SearchName);
+
     protected override async Task OnInitializedAsync()
     {
         await LoadData();
     }
 
-    private List<CheckOutQuanNh> AllData = new List<CheckOutQuanNh>();
-
     private async Task LoadData()
     {
         try
         {
-            // Load all data once
-            if (!AllData.Any())
+            IsLoading = true;
+            StateHasChanged();
+
+            Console.WriteLine($"LoadData called with: Note='{SearchNote}', Cost={SearchCost}, Name='{SearchName}', Page={CurrentPage}, Size={PageSize}");
+
+            var result = await _graphQLConsumers.SearchWithPagination(
+                SearchNote,
+                SearchCost,
+                SearchName,
+                CurrentPage,
+                PageSize
+            );
+
+            if (result != null)
             {
-                AllData = await _graphQLConsumers.GetCheckOutQuanNhs() ?? new List<CheckOutQuanNh>();
+                CheckOutQuanNhs = result.Items ?? new List<CheckOutQuanNh>();
+                TotalItems = result.TotalItems;
+                TotalPages = result.TotalPages > 0 ? result.TotalPages : 1;
+                CurrentPage = result.CurrentPage;
+
+                Console.WriteLine($"LoadData success: Found {TotalItems} items, {TotalPages} pages");
             }
-            
-            // Client-side pagination
-            TotalItems = AllData.Count;
-            TotalPages = (int)Math.Ceiling((double)TotalItems / PageSize);
-            
-            CheckOutQuanNhs = AllData
-                .Skip((CurrentPage - 1) * PageSize)
-                .Take(PageSize)
-                .ToList();
+            else
+            {
+                Console.WriteLine("LoadData: result is null");
+                CheckOutQuanNhs = new List<CheckOutQuanNh>();
+                TotalItems = 0;
+                TotalPages = 1;
+            }
         }
         catch (Exception ex)
         {
             Console.WriteLine($"Error loading check outs: {ex.Message}");
             Console.WriteLine($"Stack trace: {ex.StackTrace}");
+            if (ex.InnerException != null)
+            {
+                Console.WriteLine($"Inner exception: {ex.InnerException.Message}");
+            }
+            
             CheckOutQuanNhs = new List<CheckOutQuanNh>();
-            AllData = new List<CheckOutQuanNh>();
+            TotalItems = 0;
+            TotalPages = 1;
         }
+        finally
+        {
+            IsLoading = false;
+            StateHasChanged();
+        }
+    }
+
+    private async Task SearchData()
+    {
+        CurrentPage = 1; // Reset to first page when searching
+        await LoadData();
+    }
+
+    private async Task ClearSearch()
+    {
+        SearchNote = null;
+        SearchCost = null;
+        SearchName = null;
+        CurrentPage = 1;
+        await LoadData();
     }
 
     private async Task GoToPage(int page)

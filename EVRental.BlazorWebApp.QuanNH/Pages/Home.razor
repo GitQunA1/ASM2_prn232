@@ -1,7 +1,91 @@
 ﻿@page "/"
+@using Microsoft.AspNetCore.Authorization
+@attribute [Authorize]
+@inject NavigationManager Navigation
 
-<PageTitle>Home</PageTitle>
+<PageTitle>Home - EV Rental System</PageTitle>
 
-<h1>Hello, world!</h1>
+<div class="container-fluid py-4">
+    <div class="row">
+        <div class="col-12">
+            <div class="card-modern header-card-gradient mb-4">
+                <div class="card-body py-4">
+                    <h2 class="text-white mb-2">
+                        <i class="bi bi-lightning-charge-fill me-2"></i>
+                        Welcome to EV Rental Management System
+                    </h2>
+                    <p class="text-white-50 mb-0">Manage your electric vehicle rentals efficiently</p>
+                </div>
+            </div>
+        </div>
+    </div>
 
-Welcome to your new app.
+    <div class="row g-4">
+        <div class="col-md-6 col-lg-4">
+            <div class="card-modern hover-card" @onclick='() => Navigation.NavigateTo("/CheckOutQuanNhs/CheckOutQuanNhList")' style="cursor: pointer;">
+                <div class="card-body text-center py-5">
+                    <div class="icon-wrapper mb-3">
+                        <i class="bi bi-clipboard-check display-4 text-primary"></i>
+                    </div>
+                    <h4>Check Out Management</h4>
+                    <p class="text-muted">View and manage all rental check outs</p>
+                    <a href="/CheckOutQuanNhs/CheckOutQuanNhList" class="btn btn-gradient-primary">
+                        Go to Check Outs <i class="bi bi-arrow-right ms-2"></i>
+                    </a>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-md-6 col-lg-4">
+            <div class="card-modern hover-card" style="cursor: pointer;">
+                <div class="card-body text-center py-5">
+                    <div class="icon-wrapper mb-3">
+                        <i class="bi bi-car-front display-4 text-success"></i>
+                    </div>
+                    <h4>Vehicle Management</h4>
+                    <p class="text-muted">Manage your EV fleet</p>
+                    <button class="btn btn-gradient-success" disabled>
+                        Coming Soon
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-md-6 col-lg-4">
+            <div class="card-modern hover-card" style="cursor: pointer;">
+                <div class="card-body text-center py-5">
+                    <div class="icon-wrapper mb-3">
+                        <i class="bi bi-people display-4 text-info"></i>
+                    </div>
+                    <h4>Customer Management</h4>
+                    <p class="text-muted">Manage customer information</p>
+                    <button class="btn btn-gradient-info" disabled>
+                        Coming Soon
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<style>
+    .hover-card {
+        transition: transform 0.3s ease, box-shadow 0.3s ease;
+    }
+
+    .hover-card:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 10px 30px rgba(0, 0, 0, 0.15);
+    }
+
+    .icon-wrapper {
+        width: 100px;
+        height: 100px;
+        margin: 0 auto;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        background: rgba(102, 126, 234, 0.1);
+        border-radius: 50%;
+    }
+</style>

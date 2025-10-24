@@ -25,22 +25,36 @@ namespace EVRental.GraphQLWebAPI.QuanNH.GraphQLs
             return await _serviceProviders.ICheckOutQuanNhService.GetByIdAsync(id);
         }
 
-        public async Task<PaginationResult<List<CheckOutQuanNh>>> SearchWithPaginationAsync(CheckOutQuanNhSearchRequest request)
+        public async Task<PaginationResult<List<CheckOutQuanNh>>> SearchWithPaginationAsync(CheckOutQuanNhSearchRequestInput request)
         {
-            return await _serviceProviders.ICheckOutQuanNhService.SearchWithPaginationAsync(request);
+            var searchRequest = new CheckOutQuanNhSearchRequest
+            {
+                CurrentPage = request.CurrentPage ?? 1,
+                PageSize = request.PageSize ?? 10,
+                note = request.Note,
+                cost = request.Cost,
+                name = request.Name
+            };
+
+            return await _serviceProviders.ICheckOutQuanNhService.SearchWithPaginationAsync(searchRequest);
         }
 
-        public async Task<PaginationResult<List<CheckOutQuanNh>>> GetCheckOutQuanNhsWithPagination(int currentPage, int pageSize)
+        public async Task<PaginationResult<List<CheckOutQuanNh>>> GetCheckOutQuanNhsWithPagination(int currentPage = 1, int pageSize = 10)
         {
             var request = new CheckOutQuanNhSearchRequest
             {
-                CurrentPage = currentPage,
-                PageSize = pageSize,
+                CurrentPage = currentPage > 0 ? currentPage : 1,
+                PageSize = pageSize > 0 ? pageSize : 10,
                 note = null,
                 cost = null,
                 name = null
             };
             return await _serviceProviders.ICheckOutQuanNhService.SearchWithPaginationAsync(request);
+        }
+
+        public async Task<SystemUserAccount> Login(string userName, string password)
+        {
+            return await _serviceProviders.SystemUserAccountService.GetUserAccount(userName, password);
         }
     }
 }

@@ -32,52 +32,72 @@ namespace EVRental.Repositories.QuanNH
             return item ?? new CheckOutQuanNh();
         }
 
-        public async Task<List<CheckOutQuanNh>> SearchAsync(string note, decimal cost, string name)
+        public async Task<List<CheckOutQuanNh>> SearchAsync(string note, decimal? cost, string name)
         {
-            var query = _context.CheckOutQuanNhs
-                .Include(c => c.ReturnCondition)
-                .AsQueryable();
-
-            // Tìm kiếm theo note (nếu có)
-            if (!string.IsNullOrEmpty(note))
+            try
             {
-                query = query.Where(c => c.Notes.Contains(note));
-            }
+                var query = _context.CheckOutQuanNhs
+                    .Include(c => c.ReturnCondition)
+                    .AsQueryable();
 
-            // Tìm kiếm theo cost (nếu có và khác 0)
-            if (cost > 0)
+                // Tìm kiếm theo note (nếu có)
+                if (!string.IsNullOrWhiteSpace(note))
+                {
+                    query = query.Where(c => c.Notes != null && c.Notes.Contains(note));
+                }
+
+                // Tìm kiếm theo cost (nếu có)
+                if (cost.HasValue && cost.Value > 0)
+                {
+                    query = query.Where(c => c.TotalCost.HasValue && c.TotalCost.Value == cost.Value);
+                }
+
+                // Tìm kiếm theo name của ReturnCondition (nếu có)
+                if (!string.IsNullOrWhiteSpace(name))
+                {
+                    query = query.Where(c => 
+                        c.ReturnCondition != null && 
+                        c.ReturnCondition.Name != null && 
+                        c.ReturnCondition.Name.Contains(name)
+                    );
+                }
+
+                var items = await query
+                    .OrderByDescending(c => c.CheckOutTime)
+                    .ToListAsync();
+
+                return items ?? new List<CheckOutQuanNh>();
+            }
+            catch (Exception ex)
             {
-                query = query.Where(c => c.TotalCost == cost);
+                Console.WriteLine($"Error in SearchAsync: {ex.Message}");
+                return new List<CheckOutQuanNh>();
             }
-
-            // Tìm kiếm theo name của ReturnCondition (nếu có)
-            if (!string.IsNullOrEmpty(name))
-            {
-                query = query.Where(c => c.ReturnCondition != null && c.ReturnCondition.Name.Contains(name));
-            }
-
-            var items = await query
-                .OrderByDescending(c => c.CheckOutTime)
-                .ToListAsync();
-
-            return items ?? new List<CheckOutQuanNh>();
         }
 
         public async Task<PaginationResult<List<CheckOutQuanNh>>> SearchWithPagingAsync(CheckOutQuanNhSearchRequest searchRequest)
         {
-            var items = await this.SearchAsync(searchRequest.note, searchRequest.cost.Value, searchRequest.name);
+            // Đảm bảo có giá trị mặc định cho pagination
+            int currentPage = searchRequest.CurrentPage ?? 1;
+            int pageSize = searchRequest.PageSize ?? 10;
+
+            var items = await this.SearchAsync(searchRequest.note, searchRequest.cost, searchRequest.name);
 
             var totalItems = items.Count();
-            var totalPages = (int)Math.Ceiling((double)totalItems / searchRequest.PageSize.Value);
+            var totalPages = (int)Math.Ceiling((double)totalItems / pageSize);
 
-            items = items.Skip((searchRequest.CurrentPage.Value - 1) * searchRequest.PageSize.Value).Take(searchRequest.PageSize.Value).ToList();
+            // Đảm bảo currentPage hợp lệ
+            if (currentPage < 1) currentPage = 1;
+            if (currentPage > totalPages && totalPages > 0) currentPage = totalPages;
+
+            items = items.Skip((currentPage - 1) * pageSize).Take(pageSize).ToList();
 
             var result = new PaginationResult<List<CheckOutQuanNh>>
             {
                 TotalItems = totalItems,
                 TotalPages = totalPages,
-                CurrentPage = searchRequest.CurrentPage.Value,
-                PageSize = searchRequest.PageSize.Value,
+                CurrentPage = currentPage,
+                PageSize = pageSize,
                 Items = items
             };
 

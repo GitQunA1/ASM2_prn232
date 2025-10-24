@@ -293,7 +293,8 @@
             if (result)
             {
                 // Navigate back to list after successful delete
-                Navigation.NavigateTo("/CheckOutQuanNhs/CheckOutQuanNhList", forceLoad: true);
+                // Remove forceLoad to avoid full page reload and keep better user experience
+                Navigation.NavigateTo("/CheckOutQuanNhs/CheckOutQuanNhList");
             }
             else
             {

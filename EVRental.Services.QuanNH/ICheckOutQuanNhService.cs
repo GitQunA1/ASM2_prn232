@@ -12,7 +12,7 @@ namespace EVRental.Services.QuanNH
     {
         Task<List<CheckOutQuanNh>> GetAllAsync();
         Task<CheckOutQuanNh> GetByIdAsync(int id);
-        Task<List<CheckOutQuanNh>> SearchAsync(string note, decimal cost, string name);
+        Task<List<CheckOutQuanNh>> SearchAsync(string note, decimal? cost, string name);
         Task<PaginationResult<List<CheckOutQuanNh>>> SearchWithPaginationAsync(CheckOutQuanNhSearchRequest searchRequest);
         Task<int> CreateAsync(CheckOutQuanNh entity);
         Task<int> UpdateAsync(CheckOutQuanNh entity);

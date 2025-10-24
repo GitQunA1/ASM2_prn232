@@ -35,3 +35,8 @@ public partial class SystemUserAccount
 
     public bool IsActive { get; set; }
 }
+
+public partial class LoginGraphQLResponse
+{
+    public SystemUserAccount login { get; set; }
+}

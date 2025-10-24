@@ -268,7 +268,7 @@
 </div>
 
 @code {
-    private CheckOutQuanNh Model { get; set; } = new();
+    private CheckOutQuanNhViewModel Model { get; set; } = new();
     private List<ReturnCondition>? ReturnConditions { get; set; }
     private bool IsSubmitting { get; set; } = false;
     private string? ErrorMessage { get; set; }
@@ -312,7 +312,10 @@
             Console.WriteLine($"IsDamageReported: {Model.IsDamageReported}");
             Console.WriteLine($"Notes: {Model.Notes}");
             
-            var result = await _graphQLConsumers.CreateCheckOutQuanNh(Model);
+            // Convert ViewModel to Entity
+            var entity = Model.ToCheckOutQuanNh();
+            
+            var result = await _graphQLConsumers.CreateCheckOutQuanNh(entity);
             
             Console.WriteLine($"Result ID: {result}");
             
@@ -324,7 +327,7 @@
             }
             else
             {
-                ErrorMessage = "Failed to create check out. Result ID is 0 or negative.";
+                ErrorMessage = "Failed to create check out. Please check all required fields.";
             }
         }
         catch (Exception ex)

@@ -15,7 +15,8 @@ builder.Services.AddScoped<IServiceProviders, ServiceProviders>();
 builder.Services.AddGraphQLServer()
     .AddQueryType<Queries>()
     .AddMutationType<Mutations>()
-    .BindRuntimeType<DateTime, DateTimeType>();
+    .BindRuntimeType<DateTime, DateTimeType>()
+    .BindRuntimeType<DateOnly, DateType>();
 
 var allowAllCorsPolicy = "AllowAllCorsPolicy";
 builder.Services.AddCors(options =>

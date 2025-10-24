@@ -66,7 +66,7 @@ namespace EVRental.Services.QuanNH
             return new CheckOutQuanNh();
         }
 
-        public async Task<List<CheckOutQuanNh>> SearchAsync(string note, decimal cost, string name)
+        public async Task<List<CheckOutQuanNh>> SearchAsync(string note, decimal? cost, string name)
         {
             try
             {
@@ -81,11 +81,30 @@ namespace EVRental.Services.QuanNH
         {
             try
             {
+                // Đảm bảo searchRequest không null và có giá trị mặc định
+                if (searchRequest == null)
+                {
+                    searchRequest = new CheckOutQuanNhSearchRequest
+                    {
+                        CurrentPage = 1,
+                        PageSize = 10
+                    };
+                }
+
                 return await _unitOfWork.CheckOutQuanNhRepository.SearchWithPagingAsync(searchRequest);
             }
-            catch (Exception ex) { }
-
-            return new PaginationResult<List<CheckOutQuanNh>>();
+            catch (Exception ex) 
+            {
+                Console.WriteLine($"Error in SearchWithPaginationAsync: {ex.Message}");
+                return new PaginationResult<List<CheckOutQuanNh>>
+                {
+                    Items = new List<CheckOutQuanNh>(),
+                    CurrentPage = 1,
+                    PageSize = 10,
+                    TotalItems = 0,
+                    TotalPages = 0
+                };
+            }
         }
 
         public async Task<int> UpdateAsync(CheckOutQuanNh entity)

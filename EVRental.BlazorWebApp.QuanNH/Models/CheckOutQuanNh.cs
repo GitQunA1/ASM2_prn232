@@ -79,5 +79,5 @@ public partial class CheckOutQuanNhPaginationGraphQLResponse
 
 public partial class SearchWithPaginationGraphQLResponse
 {
-    public PaginationResult<List<CheckOutQuanNh>> searchWithPaginationAsync { get; set; }
+    public PaginationResult<List<CheckOutQuanNh>> searchWithPagination { get; set; }
 }

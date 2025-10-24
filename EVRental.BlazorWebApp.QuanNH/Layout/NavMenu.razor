@@ -1,6 +1,12 @@
-﻿<div class="top-row ps-3 navbar navbar-dark">
+﻿@using Microsoft.AspNetCore.Components.Authorization
+@inject AuthenticationStateProvider AuthStateProvider
+@inject NavigationManager Navigation
+
+<div class="top-row ps-3 navbar navbar-dark">
     <div class="container-fluid">
-        <a class="navbar-brand" href="">EVRental.BlazorWebApp.QuanNH</a>
+        <a class="navbar-brand" href="">
+            <i class="bi bi-lightning-charge-fill me-2"></i>EV Rental System
+        </a>
         <button title="Navigation menu" class="navbar-toggler" @onclick="ToggleNavMenu">
             <span class="navbar-toggler-icon"></span>
         </button>
@@ -9,30 +15,99 @@
 
 <div class="@NavMenuCssClass nav-scrollable" @onclick="ToggleNavMenu">
     <nav class="flex-column">
-        <div class="nav-item px-3">
-            <NavLink class="nav-link" href="" Match="NavLinkMatch.All">
-                <span class="bi bi-house-door-fill-nav-menu" aria-hidden="true"></span> Home
-            </NavLink>
-        </div>
+        <AuthorizeView>
+            <Authorized>
+                <!-- User Info Section -->
+                <div class="user-info-section px-3 py-3 mb-3">
+                    <div class="d-flex align-items-center">
+                        <div class="user-avatar">
+                            <i class="bi bi-person-circle"></i>
+                        </div>
+                        <div class="ms-3">
+                            <div class="user-name">@context.User.Identity?.Name</div>
+                            <div class="user-role text-muted small">
+                                @context.User.FindFirst("FullName")?.Value
+                            </div>
+                        </div>
+                    </div>
+                </div>
 
-        <div class="nav-item px-3">
-            <NavLink class="nav-link" href="/CheckOutQuanNhs/CheckOutQuanNhList" Match="NavLinkMatch.All">
-                <span class="bi bi-house-door-fill-nav-menu" aria-hidden="true"></span> CheckOutQuanNh
-            </NavLink>
-        </div>
+                <div class="nav-item px-3">
+                    <NavLink class="nav-link" href="" Match="NavLinkMatch.All">
+                        <span class="bi bi-house-door-fill me-2" aria-hidden="true"></span> Home
+                    </NavLink>
+                </div>
 
-        <div class="nav-item px-3">
-            <NavLink class="nav-link" href="counter">
-                <span class="bi bi-plus-square-fill-nav-menu" aria-hidden="true"></span> Counter
-            </NavLink>
-        </div>
-        <div class="nav-item px-3">
-            <NavLink class="nav-link" href="weather">
-                <span class="bi bi-list-nested-nav-menu" aria-hidden="true"></span> Weather
-            </NavLink>
-        </div>
+                <div class="nav-item px-3">
+                    <NavLink class="nav-link" href="/CheckOutQuanNhs/CheckOutQuanNhList">
+                        <span class="bi bi-clipboard-check me-2" aria-hidden="true"></span> Check Out Management
+                    </NavLink>
+                </div>
+
+                <div class="nav-item px-3">
+                    <NavLink class="nav-link" href="counter">
+                        <span class="bi bi-plus-square-fill me-2" aria-hidden="true"></span> Counter
+                    </NavLink>
+                </div>
+
+                <div class="nav-item px-3">
+                    <NavLink class="nav-link" href="weather">
+                        <span class="bi bi-list-nested me-2" aria-hidden="true"></span> Weather
+                    </NavLink>
+                </div>
+
+                <hr class="my-3" style="border-color: rgba(255, 255, 255, 0.2);" />
+
+                <div class="nav-item px-3">
+                    <button class="nav-link" @onclick="HandleLogout">
+                        <span class="bi bi-box-arrow-right me-2" aria-hidden="true"></span> Logout
+                    </button>
+                </div>
+            </Authorized>
+            <NotAuthorized>
+                <div class="nav-item px-3">
+                    <NavLink class="nav-link" href="login">
+                        <span class="bi bi-box-arrow-in-right me-2" aria-hidden="true"></span> Login
+                    </NavLink>
+                </div>
+            </NotAuthorized>
+        </AuthorizeView>
     </nav>
 </div>
+
+<style>
+    .user-info-section {
+        background: rgba(255, 255, 255, 0.1);
+        border-radius: 10px;
+        margin-top: 1rem;
+    }
+
+    .user-avatar {
+        width: 45px;
+        height: 45px;
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+    }
+
+    .user-avatar i {
+        font-size: 1.8rem;
+        color: white;
+    }
+
+    .user-name {
+        font-weight: 600;
+        color: white;
+        font-size: 0.95rem;
+    }
+
+    .user-role {
+        font-size: 0.8rem;
+        color: rgba(255, 255, 255, 0.7) !important;
+    }
+</style>
 
 @code {
     private bool collapseNavMenu = true;
@@ -42,5 +117,12 @@
     private void ToggleNavMenu()
     {
         collapseNavMenu = !collapseNavMenu;
+    }
+
+    private async Task HandleLogout()
+    {
+        var customAuthProvider = (CustomAuthenticationStateProvider)AuthStateProvider;
+        await customAuthProvider.MarkUserAsLoggedOut();
+        Navigation.NavigateTo("/login", forceLoad: true);
     }
 }

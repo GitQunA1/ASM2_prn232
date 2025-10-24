@@ -248,8 +248,8 @@ namespace EVRental.BlazorWebApp.QuanNH.GraphQLClients
                 var request = new GraphQLRequest
                 {
                     Query = @"
-                        query SearchWithPaginationAsync($request: CheckOutQuanNhSearchRequestInput!) {
-                            searchWithPaginationAsync(request: $request) {
+                        query SearchWithPagination($request: CheckOutQuanNhSearchRequestInput!) {
+                            searchWithPagination(request: $request) {
                                 totalItems
                                 totalPages
                                 currentPage
@@ -282,7 +282,7 @@ namespace EVRental.BlazorWebApp.QuanNH.GraphQLClients
                 };
 
                 var response = await _graphQLClient.SendQueryAsync<SearchWithPaginationGraphQLResponse>(request);
-                var result = response?.Data?.searchWithPaginationAsync;
+                var result = response?.Data?.searchWithPagination;
 
                 return result ?? new PaginationResult<List<CheckOutQuanNh>>
                 {
@@ -296,6 +296,146 @@ namespace EVRental.BlazorWebApp.QuanNH.GraphQLClients
             catch (Exception ex)
             {
                 throw new Exception($"GraphQL Error: {ex.Message}", ex);
+            }
+        }
+
+        public async Task<PaginationResult<List<CheckOutQuanNh>>> SearchWithPagination(string? note, decimal? cost, string? name, int currentPage, int pageSize)
+        {
+            try
+            {
+                // Đảm bảo các giá trị pagination hợp lệ
+                if (currentPage < 1) currentPage = 1;
+                if (pageSize < 1) pageSize = 10;
+
+                var searchRequest = new
+                {
+                    currentPage = currentPage,
+                    pageSize = pageSize,
+                    note = string.IsNullOrWhiteSpace(note) ? null : note,
+                    cost = cost,
+                    name = string.IsNullOrWhiteSpace(name) ? null : name
+                };
+
+                Console.WriteLine($"GraphQL SearchWithPagination request: {System.Text.Json.JsonSerializer.Serialize(searchRequest)}");
+
+                var request = new GraphQLRequest
+                {
+                    Query = @"
+                        query SearchWithPagination($request: CheckOutQuanNhSearchRequestInput!) {
+                            searchWithPagination(request: $request) {
+                                totalItems
+                                totalPages
+                                currentPage
+                                pageSize
+                                items {
+                                    checkOutQuanNhid
+                                    checkOutTime
+                                    returnDate
+                                    extraCost
+                                    totalCost
+                                    lateFee
+                                    isPaid
+                                    isDamageReported
+                                    notes
+                                    customerFeedback
+                                    paymentMethod
+                                    staffSignature
+                                    customerSignature
+                                    returnConditionId
+                                    returnCondition {
+                                        returnConditionId
+                                        name
+                                        severityLevel
+                                        repairCost
+                                    }
+                                }
+                            }
+                        }",
+                    Variables = new { request = searchRequest }
+                };
+
+                var response = await _graphQLClient.SendQueryAsync<SearchWithPaginationGraphQLResponse>(request);
+                
+                Console.WriteLine($"GraphQL response received: HasData={response?.Data != null}, HasErrors={response?.Errors?.Length > 0}");
+                
+                if (response?.Errors != null && response.Errors.Length > 0)
+                {
+                    foreach (var error in response.Errors)
+                    {
+                        Console.WriteLine($"GraphQL Error: {error.Message}");
+                    }
+                }
+
+                var result = response?.Data?.searchWithPagination;
+
+                if (result == null)
+                {
+                    Console.WriteLine("SearchWithPagination: result is null, returning empty result");
+                    return new PaginationResult<List<CheckOutQuanNh>>
+                    {
+                        Items = new List<CheckOutQuanNh>(),
+                        CurrentPage = currentPage,
+                        PageSize = pageSize,
+                        TotalItems = 0,
+                        TotalPages = 0
+                    };
+                }
+
+                Console.WriteLine($"SearchWithPagination success: {result.TotalItems} items, {result.TotalPages} pages");
+                return result;
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"GraphQL SearchWithPagination Error: {ex.Message}");
+                Console.WriteLine($"StackTrace: {ex.StackTrace}");
+                
+                return new PaginationResult<List<CheckOutQuanNh>>
+                {
+                    Items = new List<CheckOutQuanNh>(),
+                    CurrentPage = currentPage,
+                    PageSize = pageSize,
+                    TotalItems = 0,
+                    TotalPages = 0
+                };
+            }
+        }
+
+        public async Task<SystemUserAccount> Login(string userName, string password)
+        {
+            try
+            {
+                var request = new GraphQLRequest
+                {
+                    Query = @"
+                        query Login($userName: String!, $password: String!) {
+                            login(userName: $userName, password: $password) {
+                                userAccountId
+                                userName
+                                fullName
+                                email
+                                phone
+                                employeeCode
+                                roleId
+                                isActive
+                            }
+                        }",
+                    Variables = new { userName = userName, password = password }
+                };
+
+                var response = await _graphQLClient.SendQueryAsync<LoginGraphQLResponse>(request);
+                
+                if (response?.Errors != null && response.Errors.Length > 0)
+                {
+                    Console.WriteLine($"GraphQL Login Error: {response.Errors[0].Message}");
+                    return null;
+                }
+
+                return response?.Data?.login;
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"Login Error: {ex.Message}");
+                return null;
             }
         }
     }
